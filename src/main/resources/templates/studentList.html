@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student List</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+	<style>
+		.navbar {
+		           position: fixed;
+		           top: 0;
+		           width: 100%;
+		           background: #343a40;
+		           padding: 10px 0;
+		           z-index: 1000;
+		       }
+
+		       .navbar a {
+		           color: white;
+		           text-decoration: none;
+		           margin: 0 15px;
+		           font-weight: bold;
+		       }
+
+		       .navbar a.active {
+		           color: #ffcc00;
+		       }
+	</style>
+</head>
+<body>
+    <!-- Navbar -->
+	<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+		        <div class="container-fluid">
+		            <a class="navbar-brand" href="/">Admin Dashboard</a>
+		            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+		                <span class="navbar-toggler-icon"></span>
+		            </button>
+		            <div class="collapse navbar-collapse" id="navbarNav">
+		                <ul class="navbar-nav">
+		                    
+		                    <li class="nav-item"><a href="/registerPage" class="nav-link">Register New Student</a></li>
+		                    <li class="nav-item"><a href="/fetchAll" class="nav-link">View All Students</a></li>
+		                    <li class="nav-item"><a href="/searchPage" class="nav-link">Search Student</a></li>
+		                    <li class="nav-item"><a href="/updatePage" class="nav-link">Update Student</a></li>
+		                    <li class="nav-item"><a href="/deletePage" class="nav-link">Delete Student</a></li>
+		                </ul>
+		            </div>
+		        </div>
+		    </nav>
+
+    <!-- Student List Section -->
+    <div class="container mt-4">
+        <h2 class="text-center mb-4">Student List</h2>
+        <div class="row">
+            <!-- Loop through student list and display each student as a Bootstrap card -->
+            <div class="col-md-4 mb-4" th:each="student : ${stList}">
+                <div class="card shadow-lg">
+                    <div class="card-body">
+                        <h5 class="card-title text-primary" th:text="${student.name}"></h5>
+                        <p class="card-text"><strong>University ID:</strong> <span th:text="${student.univId}"></span></p>
+                        <p class="card-text"><strong>Email:</strong> <span th:text="${student.email}"></span></p>
+                        <p class="card-text"><strong>Branch:</strong> <span th:text="${student.branch}"></span></p>
+                        <p class="card-text"><strong>Address:</strong> <span th:text="${student.address}"></span></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Student</title>
+
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <style>
+        body {
+            background: linear-gradient(to right, #007bff, #00c6ff);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            max-width: 900px;
+        }
+
+        .navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: #343a40;
+            padding: 10px 0;
+            z-index: 1000;
+        }
+
+        .navbar a {
+            color: white;
+            text-decoration: none;
+            margin: 0 15px;
+            font-weight: bold;
+        }
+
+        .navbar a.active {
+            color: #ffcc00;
+        }
+
+        .student-card {
+            display: none;
+            max-width: 600px;
+            margin: 20px auto;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            transition: 0.3s;
+            border-radius: 10px;
+        }
+
+        .card-body {
+            text-align: justify; /* Justify the text */
+        }
+
+        .univ-id {
+            color: green; /* University ID color */
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">Admin Dashboard</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                   
+                    <li class="nav-item"><a href="/registerPage" class="nav-link">Register New Student</a></li>
+                    <li class="nav-item"><a href="/fetchAll" class="nav-link">View All Students</a></li>
+                    <li class="nav-item"><a href="/searchPage" class="nav-link active">Search Student</a></li>
+                    <li class="nav-item"><a href="/updatePage" class="nav-link">Update Student</a></li>
+                    <li class="nav-item"><a href="/deletePage" class="nav-link">Delete Student</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Search Form and Result Display -->
+    <div class="container mt-5">
+        <div class="row">
+            <!-- Search Form -->
+            <div class="col-md-5">
+                <h2 class="text-center mb-4">Search for a Student</h2>
+                <form id="searchForm">
+                    <div class="mb-3">
+                        <label for="univIdSearch" class="form-label">University ID:</label>
+                        <input type="text" id="univIdSearch" name="univId" class="form-control" placeholder="Enter University ID" required>
+                    </div>
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-primary w-100">Search</button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Search Result (Initially Hidden) -->
+            <div class="col-md-7">
+                <h3 class="text-center">Student Details</h3>
+                <div id="studentCard" class="card student-card">
+                    <div class="card-body text-center">
+                        <h5 class="card-title" id="resName"></h5>
+                        <h6 class="card-subtitle mb-2 text-muted univ-id" id="resUnivId"></h6>
+                        <p class="card-text"><strong>Email:</strong> <span id="resEmail"></span></p>
+                        <p class="card-text"><strong>Branch:</strong> <span id="resBranch"></span></p>
+                        <p class="card-text"><strong>Address:</strong> <span id="resAddress"></span></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap 5 JS & jQuery -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <script>
+        $(document).ready(function() {
+            $("#searchForm").submit(function(event) {
+                event.preventDefault(); // Prevent normal form submission
+
+                // Clear previous result and hide the card
+                $("#studentCard").hide();
+                $("#resName").text('');
+                $("#resUnivId").text('');
+                $("#resEmail").text('');
+                $("#resBranch").text('');
+                $("#resAddress").text('');
+
+                var formData = $(this).serialize(); // Serialize form data
+
+                console.log('Form Data:', formData); // Debugging log
+
+                $.post("/search", formData, function(response) {
+                    console.log('Response:', response); // Log response for debugging
+                    if (response) {
+                        console.log("Student found!"); // Debugging log
+                        $("#studentCard").show(); // Show the student card
+                        $("#resName").text(response.name);
+                        $("#resUnivId").text("University ID: " + response.univId);
+                        $("#resEmail").text(response.email);
+                        $("#resBranch").text(response.branch);
+                        $("#resAddress").text(response.address);
+                    } else {
+                        alert("Student not found.");
+                    }
+                }).fail(function() {
+                    alert("Error: Could not fetch student details.");
+                    console.error("AJAX call failed"); // Debugging log
+                });
+            });
+        });
+    </script>
+
+</body>
+</html>
